@@ -1,0 +1,333 @@
+:root {
+    --bg: #f4f6fb;
+    --surface: #ffffff;
+    --text: #1f2430;
+    --text-muted: #6b7280;
+    --border: #e2e5ec;
+    --accent: #4a6fa5;
+    --danger: #d64545;
+    --radius: 14px;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #15171f;
+        --surface: #1e212b;
+        --text: #eceef3;
+        --text-muted: #9aa0ad;
+        --border: #2c3040;
+        --accent: #7fa6e0;
+        --danger: #e58080;
+    }
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Hiragino Sans", "Yu Gothic", "Meiryo", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+.app-header {
+    padding: 28px 20px 8px;
+    text-align: center;
+}
+
+.app-header h1 {
+    margin: 0;
+    font-size: 1.7rem;
+}
+
+.app-sub {
+    color: var(--text-muted);
+    margin: 6px 0 0;
+    font-size: 0.9rem;
+}
+
+.app-main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px 20px 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+}
+
+/* 人物バー */
+.people-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.person-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.person-chip.active {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(74, 111, 165, 0.25);
+}
+
+.chip-delete {
+    color: var(--text-muted);
+    font-weight: bold;
+    line-height: 1;
+    padding: 0 2px;
+}
+
+.chip-delete:hover {
+    color: var(--danger);
+}
+
+.add-person-form {
+    display: flex;
+    gap: 8px;
+}
+
+.add-person-form input {
+    flex: 1;
+    padding: 9px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 0.9rem;
+}
+
+.add-person-form button {
+    padding: 9px 16px;
+    border-radius: 10px;
+    border: none;
+    background: var(--accent);
+    color: #fff;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* 一覧テーブル */
+.table-scroll {
+    overflow-x: auto;
+    border-radius: var(--radius);
+}
+
+.rank-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+.rank-table th,
+.rank-table td {
+    padding: 10px 12px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+}
+
+.rank-table tr:last-child td {
+    border-bottom: none;
+}
+
+.rank-table th {
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.82rem;
+}
+
+.person-name-cell {
+    text-align: left;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.rank-table tr.row-active .person-name-cell {
+    color: var(--accent);
+}
+
+.rank-badge,
+.rank-chip {
+    border: none;
+    border-radius: 8px;
+    padding: 6px 10px;
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
+}
+
+.rank-chip {
+    cursor: default;
+    display: inline-block;
+}
+
+.empty-state {
+    color: var(--text-muted);
+    text-align: center;
+    padding: 34px 16px;
+    background: var(--surface);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+}
+
+/* 詳細メーター */
+.detail-title {
+    font-size: 1.05rem;
+    margin: 0 0 12px;
+}
+
+.meter-row {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 12px;
+}
+
+.meter-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.meter-track {
+    position: relative;
+    height: 14px;
+    background: var(--bg);
+    border-radius: 999px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+
+.meter-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.25s ease;
+}
+
+.meter-ticks {
+    position: relative;
+    height: 18px;
+    margin-top: 6px;
+}
+
+.meter-tick {
+    position: absolute;
+    transform: translateX(-2px);
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.62rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.meter-tick i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+/* モーダル */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 12, 20, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 50;
+}
+
+.modal-overlay.open {
+    display: flex;
+}
+
+.modal {
+    background: var(--surface);
+    border-radius: 16px;
+    padding: 22px;
+    max-width: 420px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+.modal h3 {
+    margin: 0 0 16px;
+    font-size: 1rem;
+}
+
+.tier-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tier-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.tier-name {
+    font-weight: 700;
+    min-width: 78px;
+    font-size: 0.88rem;
+}
+
+.tier-buttons {
+    display: flex;
+    gap: 6px;
+}
+
+.tier-btn {
+    --tier-color: #888;
+    width: 46px;
+    height: 38px;
+    border-radius: 8px;
+    border: 2px solid var(--tier-color);
+    background: transparent;
+    color: var(--text);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.tier-btn.active {
+    background: var(--tier-color);
+    color: #fff;
+}
+
+.btn-cancel {
+    margin-top: 18px;
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    font-size: 0.9rem;
+}

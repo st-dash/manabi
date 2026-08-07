@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSTクエスト 〜読解力の勇者〜</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ========== タイトル画面 ========== -->
+<div id="titleScreen" class="screen">
+    <div class="title-wrap">
+        <div class="title-deco">⚔️ 📖 ⚔️</div>
+        <h1 class="game-title">RST<br>クエスト</h1>
+        <p class="game-subtitle">〜 読解力の勇者 〜</p>
+        <div class="title-story">
+            かつて「言葉の王国」は平和だった。<br>
+            しかし「誤読の魔王」が現れ、<br>
+            言葉の意味をねじ曲げてしまった。<br>
+            あなたは読解力を武器に戦う勇者だ！
+        </div>
+        <button class="btn btn-primary" onclick="startGame()">ゲームスタート ▶</button>
+        <button class="btn btn-secondary" onclick="showHowToPlay()">あそびかた ？</button>
+    </div>
+</div>
+
+<!-- ========== あそびかた画面 ========== -->
+<div id="howToPlayScreen" class="screen">
+    <div class="panel" style="margin-top:40px">
+        <h2>📖 あそびかた</h2>
+        <div class="howto-list">
+            <div class="howto-item">
+                <span class="howto-icon">🗺️</span>
+                <div>
+                    <strong>マップを進もう</strong>
+                    <p>６つのエリアを順番にクリアしよう。まずはエリア１から！</p>
+                </div>
+            </div>
+            <div class="howto-item">
+                <span class="howto-icon">📚</span>
+                <div>
+                    <strong>文章を読んで問題に答えよう</strong>
+                    <p>各エリアで読解スキルを試す問題が出る。正解するとてきにダメージ！</p>
+                </div>
+            </div>
+            <div class="howto-item">
+                <span class="howto-icon">❤️</span>
+                <div>
+                    <strong>HPに気をつけよう</strong>
+                    <p>まちがえると自分のHPが１２へる。ゼロになるとやりなおし。</p>
+                </div>
+            </div>
+            <div class="howto-item">
+                <span class="howto-icon">⚖️</span>
+                <div>
+                    <strong>言いかえの城（エリア３）がカギ！</strong>
+                    <p>２つの文が「同じ意味かどうか」を判定する問題。よく読もう！</p>
+                </div>
+            </div>
+            <div class="howto-item">
+                <span class="howto-icon">📊</span>
+                <div>
+                    <strong>スキルレーダーで弱点を知ろう</strong>
+                    <p>６つの読解スキルがマップのチャートで見える。全部鍛えよう！</p>
+                </div>
+            </div>
+        </div>
+        <button class="btn btn-primary" onclick="show('titleScreen')">もどる</button>
+    </div>
+</div>
+
+<!-- ========== マップ画面 ========== -->
+<div id="mapScreen" class="screen">
+    <div class="map-header">
+        <div class="player-info">
+            <div class="player-avatar">🧙</div>
+            <div class="player-stats">
+                <div class="player-name">読解勇者</div>
+                <div class="hp-row">
+                    <span>HP</span>
+                    <div class="hp-track"><div class="hp-fill" id="mapHpFill" style="width:100%"></div></div>
+                    <span id="mapHpText">100/100</span>
+                </div>
+                <div class="level-text" id="mapLevel">クリア: 0 / 6 エリア</div>
+            </div>
+        </div>
+        <canvas id="radarChart" width="150" height="150"></canvas>
+    </div>
+
+    <h2 class="map-title">🗺️ 言葉の王国マップ</h2>
+    <div class="stage-grid" id="stageGrid"></div>
+</div>
+
+<!-- ========== ステージ紹介画面 ========== -->
+<div id="stageIntroScreen" class="screen">
+    <div class="panel" style="margin-top:30px">
+        <div id="introContent"></div>
+        <div class="intro-buttons">
+            <button class="btn btn-secondary" onclick="backToMap()">もどる</button>
+            <button class="btn btn-primary" onclick="startBattle()">バトル開始！⚔️</button>
+        </div>
+    </div>
+</div>
+
+<!-- ========== バトル画面 ========== -->
+<div id="battleScreen" class="screen">
+    <div class="battle-wrap">
+
+        <!-- HP バー -->
+        <div class="battle-hps">
+            <div class="battle-hp-box">
+                <span class="label">🧙 勇者</span>
+                <div class="hp-row">
+                    <div class="hp-track"><div class="hp-fill" id="playerHpFill" style="width:100%"></div></div>
+                    <span id="playerHpText">100/100</span>
+                </div>
+            </div>
+            <div class="battle-hp-box">
+                <span class="label" id="enemyLabel">👾 てき</span>
+                <div class="hp-row">
+                    <div class="hp-track"><div class="hp-fill enemy-fill" id="enemyHpFill" style="width:100%"></div></div>
+                    <span id="enemyHpText"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ステージ名チップ -->
+        <div><span class="stage-chip" id="battleStageChip"></span></div>
+
+        <!-- バトルシーン -->
+        <div class="battle-scene">
+            <div class="dmg-pop" id="dmgPop"></div>
+            <div class="player-dmg-pop" id="playerDmgPop"></div>
+            <div class="enemy-sprite" id="enemySprite">👾</div>
+        </div>
+
+        <!-- 問題パネル -->
+        <div class="q-panel">
+            <div class="q-progress" id="qProgress">問題 1 / 5</div>
+            <div class="skill-badge" id="skillBadge">📚 スキル名</div>
+
+            <div class="passage-box" id="passageBox"></div>
+            <div class="q-text" id="qText"></div>
+            <div class="choices" id="choices"></div>
+
+            <div class="feedback" id="feedbackBox" style="display:none"></div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ========== ステージクリア画面 ========== -->
+<div id="stageClearScreen" class="screen">
+    <div class="clear-wrap">
+        <div class="clear-title">⭐ ステージクリア！ ⭐</div>
+        <div id="clearContent"></div>
+        <button class="btn btn-primary" id="clearNextBtn">マップへもどる 🗺️</button>
+    </div>
+</div>
+
+<!-- ========== ゲームオーバー画面 ========== -->
+<div id="gameOverScreen" class="screen">
+    <div class="clear-wrap">
+        <div class="gameover-title">💀 ゲームオーバー</div>
+        <p style="color:#b8b8d1;line-height:2">HPが０になってしまった…<br>もう一度チャレンジしよう！</p>
+        <button class="btn btn-primary" onclick="retryStage()">⚔️ もう一度</button>
+        <button class="btn btn-secondary" onclick="backToMap()">🗺️ マップへ</button>
+    </div>
+</div>
+
+<!-- ========== ゲームクリア画面 ========== -->
+<div id="gameCompleteScreen" class="screen">
+    <div class="clear-wrap">
+        <div class="complete-title">🏆 全エリア制覇！ 🏆</div>
+        <p style="color:#b8b8d1;line-height:2">おめでとう！<br>あなたは真の「読解の勇者」になった！</p>
+        <canvas id="finalRadarChart" width="280" height="280"></canvas>
+        <div id="finalSkillSummary"></div>
+        <button class="btn btn-primary" onclick="resetGame()">▶ もう一度あそぶ</button>
+    </div>
+</div>
+
+<script src="data.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
