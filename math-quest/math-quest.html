@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>算数クエスト 〜10の勇者〜</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ========== タイトル画面 ========== -->
+<div id="titleScreen" class="screen">
+    <div class="title-wrap">
+        <div class="title-deco">🍒 ➕ ➖ 🍒</div>
+        <h1 class="game-title">算数<br>クエスト</h1>
+        <p class="game-subtitle">〜 10の勇者 〜</p>
+        <div class="title-story">数の国に、計算をバラバラにするモンスターがあらわれた！<br>「10のまとまり」の力で、モンスターをたおそう！</div>
+        <div class="title-buttons">
+            <button class="btn btn-primary" id="titleCheckBtn" onclick="startCheck()">🎯 まずは実力チェック</button>
+            <button class="btn btn-secondary" id="titleMapBtn" onclick="openMap()">🗺️ ステージマップ</button>
+            <button class="btn btn-secondary" style="order:3" onclick="openCards()">🃏 計算カードずかん</button>
+            <button class="btn btn-secondary" style="order:4" onclick="show('howToScreen')">あそびかた ？</button>
+        </div>
+        <button class="btn-reset" onclick="resetAll()">🗑️ 学習データをリセット</button>
+    </div>
+</div>
+
+<!-- ========== あそびかた画面 ========== -->
+<div id="howToScreen" class="screen">
+    <div class="panel" style="margin-top:30px">
+        <h2>📖 あそびかた</h2>
+        <div class="howto-list">
+            <div class="howto-item">
+                <span class="howto-icon">🎯</span>
+                <div>
+                    <strong>まずは実力チェック</strong>
+                    <p>17問で、どのステージから始めればいいかを教えてくれるよ。全問正解したステージは合格になるよ。</p>
+                </div>
+            </div>
+            <div class="howto-item">
+                <span class="howto-icon">🍒</span>
+                <div>
+                    <strong>さくらんぼ計算で10をつくる</strong>
+                    <p>くり上がり・くり下がりのコツは「10のまとまり」。数を2つに分けて、10をつくってから計算しよう。</p>
+                </div>
+            </div>
+            <div class="howto-item">
+                <span class="howto-icon">🪜</span>
+                <div>
+                    <strong>①②③の3ステップ</strong>
+                    <p>① 手順で考える：さくらんぼ図を見ながら1つずつ答える<br>② 練習：まちがえると、とき方とアドバイスが出る<br>③ ボス戦：時間制限とハート3つ。たおすとつぎのステージへ！</p>
+                </div>
+            </div>
+            <div class="howto-item">
+                <span class="howto-icon">⌨️</span>
+                <div>
+                    <strong>答えはキーボードで</strong>
+                    <p>数字を入れて Enter。日本語入力はOFF（半角/全角キー）にしておくと、Enter 1回で答えられるよ。</p>
+                </div>
+            </div>
+            <div class="howto-item">
+                <span class="howto-icon">➖</span>
+                <div>
+                    <strong>ひき算は2つのとき方</strong>
+                    <p>減加法（10からひく）と減減法（先にばらをひく）、すきな方をえらべるよ。とちゅうで切りかえてもOK。</p>
+                </div>
+            </div>
+            <div class="howto-item">
+                <span class="howto-icon">🃏</span>
+                <div>
+                    <strong>計算カードずかん</strong>
+                    <p>くり上がり36まい・くり下がり36まい。はやく正しく3回つづけて答えると★3つ。にがてなカードほどよく出るよ。</p>
+                </div>
+            </div>
+        </div>
+        <button class="btn btn-primary" onclick="showTitle()">もどる</button>
+    </div>
+</div>
+
+<!-- ========== マップ画面 ========== -->
+<div id="mapScreen" class="screen">
+    <div class="map-header">
+        <div class="player-info">
+            <div class="player-avatar">🦸</div>
+            <div class="player-stats">
+                <div class="player-name">10の勇者</div>
+                <div class="level-text" id="mapCleared"></div>
+                <div class="level-text" id="mapCards"></div>
+            </div>
+        </div>
+        <div class="streak-badge">🔥 <span id="mapStreak">0</span>日連続</div>
+    </div>
+    <h2 class="map-title">🗺️ 数の国マップ</h2>
+    <div class="stage-grid" id="stageGrid"></div>
+    <div class="intro-buttons">
+        <button class="btn btn-secondary" onclick="openCards()">🃏 計算カードずかん</button>
+        <button class="btn btn-secondary" onclick="showTitle()">タイトルへ</button>
+    </div>
+</div>
+
+<!-- ========== ステージ紹介画面 ========== -->
+<div id="stageScreen" class="screen">
+    <div class="panel" style="margin-top:24px">
+        <div id="stageContent"></div>
+        <div class="intro-buttons">
+            <button class="btn btn-secondary" onclick="openMap()">マップへもどる</button>
+        </div>
+    </div>
+</div>
+
+<!-- ========== バトル（問題）画面 ========== -->
+<div id="battleScreen" class="screen">
+    <div class="battle-wrap">
+        <div class="battle-top-bar">
+            <span class="stage-chip" id="battleStageChip"></span>
+            <button class="btn-exit-battle" onclick="exitBattle()">✕ やめる</button>
+        </div>
+
+        <div class="battle-hps" id="battleHps">
+            <div class="battle-hp-box">
+                <span class="label">🦸 10の勇者</span>
+                <div class="player-status" id="playerStatus"></div>
+            </div>
+            <div class="battle-hp-box">
+                <span class="label" id="enemyLabel">👾 てき</span>
+                <div class="hp-row">
+                    <div class="hp-track"><div class="hp-fill enemy-fill" id="enemyHpFill" style="width:100%"></div></div>
+                    <span id="enemyHpText"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="battle-scene" id="battleScene">
+            <div class="dmg-pop" id="dmgPop"></div>
+            <div class="player-dmg-pop" id="playerDmgPop"></div>
+            <div class="enemy-sprite" id="enemySprite">👾</div>
+        </div>
+
+        <div class="q-progress" id="qProgress"></div>
+        <div class="timer-track" id="timerWrap"><div class="timer-fill" id="timerFill"></div></div>
+
+        <div class="q-panel">
+            <div id="qArea"></div>
+            <div id="fbBox"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ========== クリア画面 ========== -->
+<div id="clearScreen" class="screen">
+    <div class="clear-wrap">
+        <div class="clear-title" id="clearTitle">⭐ クリア！ ⭐</div>
+        <div id="clearContent" class="clear-content"></div>
+    </div>
+</div>
+
+<!-- ========== ゲームオーバー画面 ========== -->
+<div id="gameOverScreen" class="screen">
+    <div class="clear-wrap">
+        <div class="gameover-title">💔 ハートがなくなった…</div>
+        <p class="gameover-text">あと少し！ さくらんぼ計算の手順を思い出して、<br>もう一度ちょうせんしよう。</p>
+        <div class="clear-buttons" id="gameOverButtons"></div>
+    </div>
+</div>
+
+<!-- ========== 実力チェック結果画面 ========== -->
+<div id="checkResultScreen" class="screen">
+    <div class="clear-wrap">
+        <div class="clear-title">🎯 実力チェックのけっか</div>
+        <div id="checkResultContent" class="clear-content"></div>
+    </div>
+</div>
+
+<!-- ========== 計算カードずかん ========== -->
+<div id="cardsScreen" class="screen">
+    <div class="panel" style="margin-top:24px">
+        <h2>🃏 計算カードずかん</h2>
+        <p class="panel-note">はやく正しく3回つづけて答えると★3つ。カードをおすと、とき方が見られるよ。</p>
+        <button class="btn btn-primary" onclick="startWeakTraining()">🔥 にがてカード特訓（10問）</button>
+        <p class="panel-note" id="weakNote"></p>
+
+        <div class="card-section">
+            <h3>➕ くり上がりのたし算</h3>
+            <div class="card-count" id="addCardCount"></div>
+            <div class="card-grid" id="addCardGrid"></div>
+        </div>
+        <div class="card-section">
+            <h3>➖ くり下がりのひき算</h3>
+            <div class="card-count" id="subCardCount"></div>
+            <div class="card-grid" id="subCardGrid"></div>
+        </div>
+        <div class="card-legend">
+            <span><span class="legend-box"></span>まだ</span>
+            <span><span class="legend-box weak"></span>さいごにまちがえた</span>
+            <span><span class="legend-box s1"></span>★1〜2</span>
+            <span><span class="legend-box s3"></span>★3</span>
+        </div>
+        <div class="intro-buttons">
+            <button class="btn btn-secondary" onclick="openMap()">🗺️ マップへ</button>
+            <button class="btn btn-secondary" onclick="showTitle()">タイトルへ</button>
+        </div>
+    </div>
+</div>
+
+<!-- ========== カードのとき方（モーダル） ========== -->
+<div class="modal" id="modal" onclick="if (event.target === this) closeModal()">
+    <div class="modal-box">
+        <div id="modalContent"></div>
+        <button class="btn btn-secondary" onclick="closeModal()">とじる</button>
+    </div>
+</div>
+
+<script src="data.js"></script>
+<script src="problems.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
