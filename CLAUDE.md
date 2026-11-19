@@ -10,6 +10,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **アプリごとに専用サブフォルダを作り、ファイルが混ざらないようにする。** 新しいアプリを追加するときは、必ず新規サブフォルダ（例: `new-app/`）を作成し、その中に HTML/CSS/JS 一式を収める。ルート直下に個別アプリのファイルを直接置かない。
 
+ルート直下の `index.html` は、各アプリへのリンクを並べた「アプリえらび」のトップページ。**新しいアプリを追加したら、このページにもカードを追加する。**
+
+## 公開（GitHub Pages）
+
+GitHub リポジトリ `st-dash/manabi` の main ブランチを GitHub Pages で公開している（`https://st-dash.github.io/manabi/`）。ビルド工程はなく、push した HTML/CSS/JS がそのまま配信される。`.nojekyll` は Jekyll による変換を止めるためのファイルなので消さない。
+
 ## 既存アプリ
 
 ### RSTクエスト（rst-quest/rst-quest.html）
